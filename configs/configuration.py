@@ -1,2 +1,4 @@
-
-REFIT_DATA_PATH = '/data/external/refit'
+dataset_config = {
+        'REFIT_DATA_FOLDER' : '/data/external/refit/',
+        'REFIT_DATA_TYPE' : '.csv'
+    }
