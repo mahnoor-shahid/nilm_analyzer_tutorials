@@ -27,7 +27,7 @@ https://rdcu.be/cMD9F
 - about repo cite article and link to pdf
 - comment every package imported
 - logs
-- clean refit
+- clean refit try
 
 
 
