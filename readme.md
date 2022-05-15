@@ -30,8 +30,6 @@ https://rdcu.be/cMD9F
 - clean refit try
 
 
-
-
 ### Downloads:
 The REFIT Smart Home dataset is a publicly available dataset of Smart Home data.
 
