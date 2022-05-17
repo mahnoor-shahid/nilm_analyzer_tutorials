@@ -1,4 +1,14 @@
+general_config = {
+        
+    'DATA_FOLDER' : 'data/refit/',
+    'DATA_TYPE' : '.csv',
+    'README_FILE' : 'data/refit/REFIT_Readme.txt'
+    
+}
+
 dataset_config = {
-        'REFIT_DATA_FOLDER' : '/data/external/refit/',
-        'REFIT_DATA_TYPE' : '.csv'
-    }
+    
+    'HOUSES' : [3],
+    'APPLIANCES' : ['kettle'],
+    
+}
