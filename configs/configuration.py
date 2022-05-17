@@ -5,10 +5,3 @@ general_config = {
     'README_FILE' : 'data/refit/REFIT_Readme.txt'
     
 }
-
-dataset_config = {
-    
-    'HOUSES' : [3,5,7,8],
-    'APPLIANCES' : ['kettle'],
-    
-}
