@@ -105,22 +105,21 @@ class REFIT_Loader(CSV_Loader):
         """
         try:
             ls = {}
+            display(f"Fetching data for appliance = {target_appliance}")
             if houses == 'all_houses':
-                for house_number in range(1, len(self.collective_dataset)+1):
-                    print(house_number)
+                for house_number in self.collective_dataset.keys():
                     if target_appliance in self.collective_dataset[house_number].columns:
+                        display(f"Fetching data for House {house_number}")
                         data = self.collective_dataset[house_number][['Time', target_appliance]].compute()
                         ls.update({house_number: data})
             elif type(houses) == list and len(houses)!=0:
                 for house_number in houses:
                     if target_appliance in self.collective_dataset[house_number].columns:
-                        display(f'Fetching data for House {house_number}')
+                        display(f"Fetching data for House {house_number}")
                         data = self.collective_dataset[house_number][['Time', target_appliance]].compute()
                         ls.update({house_number: data})
             else:
-                raise Exception("argument 'houses' should not be an empty list or by default set should be set to 'all_houses'")
-            
-            display("Fetching data for appliance = {target_appliance}")
+                raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list or should not contain index 0")
             return ls
                 
         except Exception as e:
