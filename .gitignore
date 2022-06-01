@@ -1,4 +1,4 @@
-data/
+data/refit/
 __pycache__
 .ipynb_checkpoints
 *.pkl
