@@ -24,11 +24,16 @@ https://rdcu.be/cMD9F
 
 ### To Do:
 - get started/ config/ utils/ processed csv
-- sampling how to do
+- make all columns lower case
 - data downloading to source 
+- get durations
+- stats of raw
+- corrupted check
+- make this a submodule to dtw
 - about repo cite article and link to pdf
 - comment every package imported
 - logs
+- sampling how to do
 
 
 

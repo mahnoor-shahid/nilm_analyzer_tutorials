@@ -1,5 +1,5 @@
 
-from configs.configuration import general_config
+from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
 import dask.dataframe as dd
 
@@ -80,10 +80,11 @@ class REFIT_Loader(CSV_Loader):
             display("Error occured in initialization of REFIT_Loader class due to ", e)
                 
         finally:
-            self.collective_dataset = CSV_Loader._load_files_via_dask(_data_folder=general_config['DATA_FOLDER']+'House_',
-                                                                _files_format=general_config['DATA_TYPE'],
-                                                                _buildings=general_config['REFIT_HOUSES'])
-            self.keys_of_appliances = refit_parser(general_config['README_FILE'])
+            config = get_config_from_json(description="general configuration", config_file="./configs/general_config.json")
+            self.collective_dataset = CSV_Loader._load_files_via_dask(_data_folder=config['DATA_FOLDER']+'House_',
+                                                                _files_format=config['DATA_TYPE'],
+                                                                _buildings=config['REFIT_HOUSES'])
+            self.keys_of_appliances = refit_parser(config['README_FILE'])
             for house_number in self.collective_dataset:
                 cols = self.keys_of_appliances[str(house_number)]
                 self.collective_dataset[house_number] = self.collective_dataset[house_number].rename(columns={"Appliance1":cols[1], "Appliance2":cols[2], "Appliance3":cols[3], "Appliance4":cols[4], "Appliance5":cols[5],

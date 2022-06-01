@@ -1,8 +1,4 @@
 
-import re
-from configs.configuration import general_config
-
-
 def refit_parser(readme_file):
     """
     
