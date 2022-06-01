@@ -18,12 +18,12 @@ def refit_parser(readme_file):
                     else:
                         target = [value.split('.') for value in [value for value in content[i+indx].split(',') if value != '\n']]
                         for t in target:
-                            if len(t) > 2: ##### one comma missing caused issue
+                            if len(t) > 2: ##### one comma missing in house 5 caused issue
                                 appliances.append(t[1])
                                 appliances.append(t[2])
                             else:
                                 appliances.append(t[1])
-                ls.update({house: [item.split('\n')[0] for item in appliances]})
+                ls.update({house: [item.split('\n')[0].replace(" ", "") for item in appliances]})
         return ls
     
     except Exception as e:
