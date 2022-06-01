@@ -23,13 +23,13 @@ https://rdcu.be/cMD9F
 
 
 ### To Do:
-- data load takes memory
+- get started/ config/ utils/ processed csv
 - sampling how to do
 - data downloading to source 
 - about repo cite article and link to pdf
 - comment every package imported
 - logs
-- clean refit try
+
 
 
 ### Downloads:

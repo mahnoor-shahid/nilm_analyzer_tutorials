@@ -1,6 +1,6 @@
 
 from configs.configuration import general_config
-from utils.utilities import refit_parser
+from utils.parser import refit_parser
 import dask.dataframe as dd
 
 
