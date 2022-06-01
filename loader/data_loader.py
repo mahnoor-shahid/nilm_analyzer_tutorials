@@ -86,9 +86,13 @@ class REFIT_Loader(CSV_Loader):
                                                                 _buildings=config['REFIT_HOUSES'])
             self.keys_of_appliances = refit_parser(config['README_FILE'])
             for house_number in self.collective_dataset:
-                cols = self.keys_of_appliances[str(house_number)]
-                self.collective_dataset[house_number] = self.collective_dataset[house_number].rename(columns={"Appliance1":cols[1], "Appliance2":cols[2], "Appliance3":cols[3], "Appliance4":cols[4], "Appliance5":cols[5],
-                                                   "Appliance6":cols[6], "Appliance7":cols[7], "Appliance8":cols[8], "Appliance9":cols[9]})
+                cols = [header.lower() for header in self.keys_of_appliances[str(house_number)]]
+                self.collective_dataset[house_number] = self.collective_dataset[house_number].rename(columns={"Time": "time", "Unix": "unix", "Aggregate": cols[0], "Appliance1":cols[1], "Appliance2":cols[2],
+                                                                                                      "Appliance3":cols[3], "Appliance4":cols[4], "Appliance5":cols[5],"Appliance6":cols[6], "Appliance7":cols[7],
+                                                                                                      "Appliance8":cols[8], "Appliance9":cols[9]})
+                self.collective_dataset[house_number].index = self.collective_dataset[house_number]['time']
+                self.collective_dataset[house_number] = self.collective_dataset[house_number].drop('time', axis=1)
+                
     def get_house_data(self, house_number):
         """
         

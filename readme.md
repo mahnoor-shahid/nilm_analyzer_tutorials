@@ -24,7 +24,6 @@ https://rdcu.be/cMD9F
 
 ### To Do:
 - get started/ config/ utils/ processed csv
-- make all columns lower case
 - data downloading to source 
 - get durations
 - stats of raw

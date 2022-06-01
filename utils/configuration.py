@@ -13,9 +13,8 @@ def get_config_from_json(description, config_file):
     with open(config_file, 'r') as json_file:
         try:
             config_dict = json.load(json_file)
-            print(f"Followings are the {description} of your experiment..")
+            display(f"Followings are the {description} of your experiment..")
             print(config_dict)
-            print()
             return config_dict
         
         except ValueError:
