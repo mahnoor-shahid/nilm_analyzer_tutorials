@@ -111,25 +111,25 @@ class REFIT_Loader(CSV_Loader):
         try:
             ls = {}
             target_appliance = target_appliance.lower()
-            display(f"Fetching data for appliance = {target_appliance}")
+            display(f"Fetching data for appliance {target_appliance.upper()} ...")
             if houses == 'all_houses':
                 for house_number in self.collective_dataset.keys():
-                    print(self.collective_dataset[house_number].columns)
                     if target_appliance in self.collective_dataset[house_number].columns:
                         display(f"Fetching data for House {house_number}")
                         data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
                         ls.update({house_number: data})
-            elif type(houses) == list and len(houses)!=0:
+            elif type(houses) == list and len(houses)!=0: 
                 for house_number in houses:
-                    print(self.collective_dataset[house_number].columns)
-                    if target_appliance not in self.collective_dataset[house_number].columns:
-                        display(f"House {house_number} does not have {target_appliance}")
+                    if house_number not in self.collective_dataset.keys():
+                        display(f"House number = {house_number} does not exist.")
+                    elif target_appliance not in self.collective_dataset[house_number].columns:
+                        display(f"House number = {house_number} does not have {target_appliance}")
                     else:
                         display(f"Fetching data for House {house_number}")
                         data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
                         ls.update({house_number: data})
             else:
-                raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list. Argument values must be a list of valid house numbers.")
+                raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list. Argument 'houses' must be a list of valid house numbers.")
             return ls
                 
         except Exception as e:
