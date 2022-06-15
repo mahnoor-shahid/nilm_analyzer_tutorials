@@ -37,6 +37,7 @@ https://rdcu.be/cMD9F
 - sampling how to do
 -      tmp_df.index = pd.to_datetime(tmp_df['Unix'], unit='s')
 -    tmp_df.index.name = index_name
+- utils loader propor document
 
 
 

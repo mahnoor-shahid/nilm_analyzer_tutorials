@@ -115,13 +115,12 @@ class REFIT_Loader(CSV_Loader):
         try:
             ls = {}
             target_appliance = target_appliance.lower()
-            print(f"Loading data for appliance {target_appliance.upper()}")
+            print(f"Loading data for appliance {target_appliance.upper()}\n")
             if houses == 'all_houses':
                 for house_number in self.collective_dataset.keys():
                     if target_appliance in self.collective_dataset[house_number].columns:
                         print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                        data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
-                        ls.update({house_number: data})
+                        ls.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
             elif type(houses) == list and len(houses)!=0: 
                 for house_number in houses:
                     if house_number not in self.collective_dataset.keys():
@@ -130,8 +129,7 @@ class REFIT_Loader(CSV_Loader):
                         print(f"House number = {house_number} does not have {target_appliance}")
                     else:
                         print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                        data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
-                        ls.update({house_number: data})
+                        ls.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
             else:
                 raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list. Argument 'houses' must be a list of valid house numbers.")
             return ls
