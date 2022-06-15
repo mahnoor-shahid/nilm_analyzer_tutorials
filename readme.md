@@ -27,12 +27,16 @@ https://rdcu.be/cMD9F
 - data downloading to source 
 - get durations
 - stats of raw
+- create environment file
 - corrupted check
+- selection of column in cotains
 - make this a submodule to dtw
 - about repo cite article and link to pdf
 - comment every package imported
 - logs
 - sampling how to do
+-      tmp_df.index = pd.to_datetime(tmp_df['Unix'], unit='s')
+-    tmp_df.index.name = index_name
 
 
 

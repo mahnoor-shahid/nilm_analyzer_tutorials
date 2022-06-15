@@ -4,7 +4,7 @@ def refit_parser(readme_file):
     
     """
     try:
-        display(f'Parsing the readme file specified: {readme_file}')
+        print(f'Parsing the readme file specified: {readme_file}')
         with open(readme_file) as f:
             content = f.readlines()
         ls = {}
@@ -27,4 +27,4 @@ def refit_parser(readme_file):
         return ls
     
     except Exception as e:
-        display("Error occured in parser method due to ", e)
+        print("Error occured in parser method due to ", e)

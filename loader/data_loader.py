@@ -14,7 +14,7 @@ class _Loader:
             pass
             
         except Exception as e:
-            display("Error occured in initialization of _Loader interface due to ", e)
+            print("Error occured in initialization of _Loader interface due to ", e)
                 
         finally:
             pass
@@ -33,7 +33,7 @@ class CSV_Loader(_Loader):
             super().__init__()
         
         except Exception as e:
-            display("Error occured in initialization of CSV_Loader class due to ", e)
+            print("Error occured in initialization of CSV_Loader class due to ", e)
                 
         finally:
             pass
@@ -51,7 +51,7 @@ class CSV_Loader(_Loader):
             return df  
         
         except Exception as e:
-            display("Error occured in _load_file method of CSV_Loader class due to ", e)
+            print("Error occured in _load_file method of CSV_Loader class due to ", e)
     
     @staticmethod
     def _load_files_via_dask(_data_folder,
@@ -59,13 +59,13 @@ class CSV_Loader(_Loader):
                              _buildings):
         try:
             ls = {}
-            display(f"Loading specified buildings: {_buildings}")
+            print(f"Loading specified buildings: {_buildings}")
             for i in _buildings:
                 ls.update({i: dd.read_csv(f"{_data_folder}{i}{_files_format}")})
             return ls
         
         except Exception as e:
-            display("Error occured in _load_file_via_dask method of CSV_Loader class due to ", e)
+            print("Error occured in _load_file_via_dask method of CSV_Loader class due to ", e)
 
             
 class REFIT_Loader(CSV_Loader):
@@ -77,10 +77,10 @@ class REFIT_Loader(CSV_Loader):
             super().__init__()
         
         except Exception as e:
-            display("Error occured in initialization of REFIT_Loader class due to ", e)
+            print("Error occured in initialization of REFIT_Loader class due to ", e)
                 
         finally:
-            config = get_config_from_json(description="general configuration", config_file="./configs/general_config.json")
+            config = get_config_from_json(description="general configuration", config_file="./config.json")
             self.collective_dataset = CSV_Loader._load_files_via_dask(_data_folder=config['DATA_FOLDER']+'House_',
                                                                 _files_format=config['DATA_TYPE'],
                                                                 _buildings=config['REFIT_HOUSES'])
@@ -98,11 +98,15 @@ class REFIT_Loader(CSV_Loader):
         
         """
         try:
-            display(f"Fetching data for house = {house_number}")
-            return self.collective_dataset[house_number].compute()
+            if house_number not in self.collective_dataset.keys():
+                print(f"House number = {house_number} does not exist.")
+                return None
+            else:   
+                print(f"Loading data for house = {house_number}")
+                return self.collective_dataset[house_number].compute()
         
         except Exception as e:
-            display("Error occured in get_house_data method of REFIT_Loader due to ", e)
+            print("Error occured in get_house_data method of REFIT_Loader due to ", e)
     
     def get_appliance_data(self, target_appliance, houses='all_houses'):
         """
@@ -111,21 +115,21 @@ class REFIT_Loader(CSV_Loader):
         try:
             ls = {}
             target_appliance = target_appliance.lower()
-            display(f"Fetching data for appliance {target_appliance.upper()} ...")
+            print(f"Loading data for appliance {target_appliance.upper()}")
             if houses == 'all_houses':
                 for house_number in self.collective_dataset.keys():
                     if target_appliance in self.collective_dataset[house_number].columns:
-                        display(f"Fetching data for House {house_number}")
+                        print(f"Fetching {target_appliance.upper()} data for House {house_number}")
                         data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
                         ls.update({house_number: data})
             elif type(houses) == list and len(houses)!=0: 
                 for house_number in houses:
                     if house_number not in self.collective_dataset.keys():
-                        display(f"House number = {house_number} does not exist.")
+                        print(f"House number = {house_number} does not exist.")
                     elif target_appliance not in self.collective_dataset[house_number].columns:
-                        display(f"House number = {house_number} does not have {target_appliance}")
+                        print(f"House number = {house_number} does not have {target_appliance}")
                     else:
-                        display(f"Fetching data for House {house_number}")
+                        print(f"Fetching {target_appliance.upper()} data for House {house_number}")
                         data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
                         ls.update({house_number: data})
             else:
@@ -133,6 +137,6 @@ class REFIT_Loader(CSV_Loader):
             return ls
                 
         except Exception as e:
-            display("Error occured in get_appliance_data method of REFIT_Loader due to ", e)
+            print("Error occured in get_appliance_data method of REFIT_Loader due to ", e)
 
     
