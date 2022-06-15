@@ -69,7 +69,6 @@ def get_activities(data, target_appliance=None, threshold=None):
                 threshold = 0.0
                 
         if isinstance(data, dict):
-            print('ditionary')
             house_activities = {}
             for key, df in data.items():
                 if target_appliance is None:
@@ -79,13 +78,12 @@ def get_activities(data, target_appliance=None, threshold=None):
             return house_activities
     
         elif isinstance(data, pd.DataFrame):
-            print('dfdfdf')
             house_activities = {}
             if target_appliance is None:
                 for col in data.columns[2:-1]:
                     target_appliance = col
                     print(f"Estimating active durations of {target_appliance}")
-                    house_activities.update({key: generate_activity_report(data, target_appliance, threshold)})
+                    house_activities.update({target_appliance: generate_activity_report(data, target_appliance, threshold)})
                 return house_activities
             else:
                 print(f"Estimating active durations of {target_appliance}")
