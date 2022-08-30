@@ -1,4 +1,4 @@
-# REFIT data analysis
+# REFIT data loader
 
 ###
 http://dx.doi.org/10.1038/sdata.2016.122
