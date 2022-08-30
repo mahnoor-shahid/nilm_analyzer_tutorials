@@ -3,7 +3,6 @@ from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
 import dask.dataframe as dd
 
-
 class _Loader:
     """
     Interface that loads all the data into the memory
@@ -92,6 +91,21 @@ class REFIT_Loader(CSV_Loader):
                                                                                                       "Appliance8":cols[8], "Appliance9":cols[9]})
                 self.collective_dataset[house_number].index = self.collective_dataset[house_number]['time']
                 self.collective_dataset[house_number] = self.collective_dataset[house_number].drop('time', axis=1)
+                
+    def get_appliance_names(self, house_number):
+        """
+        
+        """
+        try:
+            if house_number not in self.collective_dataset.keys():
+                print(f"House number = {house_number} does not exist.")
+                return None
+            else:   
+                print(f"Fetching appliances for house = {house_number}")
+                return [name for name in self.collective_dataset[house_number].columns]
+        
+        except Exception as e:
+            print("Error occured in get_appliance_names method of REFIT_Loader due to ", e)
                 
     def get_house_data(self, house_number):
         """

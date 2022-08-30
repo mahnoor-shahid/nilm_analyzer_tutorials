@@ -11,7 +11,7 @@ def convert_timestamps2minutes(tstamps: pd.Series):
         print("Exception raised in generating convert_timestamps2minutes() method = ", e)
         
         
-def convert_objects2timestamps(objects: pd.Series):
+def convert_object2timestamps(objects: pd.Series):
     try:
         return pd.to_datetime(objects)
 
