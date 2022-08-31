@@ -1,7 +1,9 @@
 
 from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
+from transformations import Data
 import dask.dataframe as dd
+
 
 class _Loader:
     """
@@ -23,6 +25,7 @@ class _Loader:
         raise NotImplementedError    
 
 
+        
 class CSV_Loader(_Loader):
     """
     
@@ -65,8 +68,9 @@ class CSV_Loader(_Loader):
         
         except Exception as e:
             print("Error occured in _load_file_via_dask method of CSV_Loader class due to ", e)
+    
 
-            
+    
 class REFIT_Loader(CSV_Loader):
     """
     
@@ -146,7 +150,7 @@ class REFIT_Loader(CSV_Loader):
                         ls.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
             else:
                 raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list. Argument 'houses' must be a list of valid house numbers.")
-            return ls
+            return Data(ls)
                 
         except Exception as e:
             print("Error occured in get_appliance_data method of REFIT_Loader due to ", e)
