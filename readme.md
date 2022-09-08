@@ -47,7 +47,6 @@ https://pureportal.strath.ac.uk/en/datasets/refit-electrical-load-measurements-c
 
 ### Referenced Repos:
 
-
 ### Repo Structure:
 This repository follows the below structure format:
 ```
