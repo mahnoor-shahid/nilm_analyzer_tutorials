@@ -1,8 +1,9 @@
 
 from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
-from transformations import Data
+# from transformations import Data
 import dask.dataframe as dd
+import utils.time_utils as t
 
 
 class _Loader:
@@ -12,7 +13,7 @@ class _Loader:
 
     def __init__(self):
         try:
-            pass
+            self.data = {}
             
         except Exception as e:
             print("Error occured in initialization of _Loader interface due to ", e)
@@ -131,14 +132,13 @@ class REFIT_Loader(CSV_Loader):
         
         """
         try:
-            ls = {}
             target_appliance = target_appliance.lower()
             print(f"Loading data for appliance {target_appliance.upper()}\n")
             if houses == 'all_houses':
                 for house_number in self.collective_dataset.keys():
                     if target_appliance in self.collective_dataset[house_number].columns:
                         print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                        ls.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
+                        self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
             elif type(houses) == list and len(houses)!=0: 
                 for house_number in houses:
                     if house_number not in self.collective_dataset.keys():
@@ -147,12 +147,55 @@ class REFIT_Loader(CSV_Loader):
                         print(f"House number = {house_number} does not have {target_appliance}")
                     else:
                         print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                        ls.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
+                        self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
             else:
                 raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list. Argument 'houses' must be a list of valid house numbers.")
-            return Data(ls)
+            return RefitData(self.data)
                 
         except Exception as e:
             print("Error occured in get_appliance_data method of REFIT_Loader due to ", e)
+
+
+class RefitData():
+    """
+    
+    """
+    def __init__(self, data):
+        try:
+            self.data = data
+        
+        except Exception as e:
+            print("Error occured in initialization of RefitData class due to ", e)
+                
+        finally:
+            pass
+    
+#     @staticmethod
+    def resample(self, sampling_period='8s', fill_value=0.0, window_limit=3.0):
+        """
+        
+        """
+        try:
+            self.sampling_period = sampling_period
+            self.fill_value = fill_value
+            self.window_limit= int(window_limit*60)
+            ls = {}
+
+            for house_number in self.data.keys():
+                print(f"Resampling for house number: ", house_number)
+                target_appliance = self.data[house_number].columns[-1]
+                appliance_data = self.data[house_number]
+                appliance_data.index = t.convert_object2timestamps(appliance_data.index)
+#                 appliance_data = appliance_data.resample('1s').mean().dropna()
+                appliance_data = appliance_data.resample('1s').asfreq()
+                appliance_data.fillna(method='ffill', axis=0, inplace=True, limit=self.window_limit)
+                appliance_data.fillna(axis=0, inplace=True, value=self.fill_value)
+                appliance_data = appliance_data.resample(self.sampling_period).median()
+                ls.update({house_number: appliance_data})
+            
+            self.data = ls
+
+        except Exception as e:
+            print("Error occured in resample method of REFIT_Loader due to ", e) 
 
     
