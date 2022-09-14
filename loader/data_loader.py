@@ -5,7 +5,23 @@ from utils.parser import refit_parser
 import dask.dataframe as dd
 import utils.time_utils as t
 
+def check_house_availability(house, collection):
+    """
 
+    """
+    try:
+        if house in collection:
+            return True
+
+        else:
+            print(f"House number = {house} does not exist in the provided dataset.")
+            return False
+
+
+
+    except Exception as e:
+        print("Error occured in check_house_availability method of REFIT_Loader due to ", e)
+            
 class _Loader:
     """
     Interface that loads all the data into the memory
@@ -97,60 +113,70 @@ class REFIT_Loader(CSV_Loader):
                 self.collective_dataset[house_number].index = self.collective_dataset[house_number]['time']
                 self.collective_dataset[house_number] = self.collective_dataset[house_number].drop('time', axis=1)
                 
-    def get_appliance_names(self, house_number):
+    def get_appliance_names(self, house=None):
         """
         
         """
         try:
-            if house_number not in self.collective_dataset.keys():
-                print(f"House number = {house_number} does not exist.")
-                return None
-            else:   
-                print(f"Fetching appliances for house = {house_number}")
-                return [name for name in self.collective_dataset[house_number].columns]
-        
+            if house == None:
+                print(f"Please specify target house/s using the arg 'house' (int or list)")  
+            elif isinstance(house, int):
+                if check_house_availability(house, self.collective_dataset.keys()):
+                    print(f"Fetching appliances for house = {house}")
+                    return [name for name in self.collective_dataset[house].columns]   
+            elif isinstance(house, list):
+                pass
+            else:
+                pass
+
         except Exception as e:
             print("Error occured in get_appliance_names method of REFIT_Loader due to ", e)
                 
-    def get_house_data(self, house_number):
+    def get_house_data(self, house=None):
         """
         
         """
         try:
-            if house_number not in self.collective_dataset.keys():
-                print(f"House number = {house_number} does not exist.")
-                return None
+            if house == None:
+                print(f"Please specify target house using the arg 'house' (int: house id)")  
+            elif isinstance(house, int):
+                if check_house_availability(house, self.collective_dataset.keys()):
+                    print(f"Loading data for house = {house}")
+                    return self.collective_dataset[house].compute() 
             else:   
-                print(f"Loading data for house = {house_number}")
-                return self.collective_dataset[house_number].compute()
+                pass
         
         except Exception as e:
             print("Error occured in get_house_data method of REFIT_Loader due to ", e)
     
-    def get_appliance_data(self, target_appliance, houses='all_houses'):
+    def get_appliance_data(self, target_appliance, house=None):
         """
         
         """
         try:
+            if target_appliance == None:
+                print(f"Please specify target appliance using the arg 'target_appliance' (str: name of the appliance)")  
             target_appliance = target_appliance.lower()
-            print(f"Loading data for appliance {target_appliance.upper()}\n")
-            if houses == 'all_houses':
+            print(f"Loading data for appliance {target_appliance.upper()} ...")
+            
+            if house == None:
                 for house_number in self.collective_dataset.keys():
                     if target_appliance in self.collective_dataset[house_number].columns:
                         print(f"Fetching {target_appliance.upper()} data for House {house_number}")
                         self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
-            elif type(houses) == list and len(houses)!=0: 
-                for house_number in houses:
-                    if house_number not in self.collective_dataset.keys():
-                        print(f"House number = {house_number} does not exist.")
-                    elif target_appliance not in self.collective_dataset[house_number].columns:
-                        print(f"House number = {house_number} does not have {target_appliance}")
                     else:
-                        print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                        self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
+                        print(f"Appliance '{target_appliance}' does not exist in house {house_number}. Check the availability of the appliance by using 'get_appliance_names' method")
+            elif isinstance(house, list) and len(house)!=0: 
+                for house_number in house:
+                    if check_house_availability(house_number, self.collective_dataset.keys()):
+                        if target_appliance in self.collective_dataset[house_number].columns:
+                            print(f"Fetching {target_appliance.upper()} data for House {house_number}")
+                            self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
+                        else:
+                            print(f"Appliance '{target_appliance}' does not exist in house {house_number}. Check the availability of the appliance by using 'get_appliance_names' method")
             else:
-                raise Exception("Argument 'houses' is by default set to 'all_houses'. Argument 'houses' should not be an empty list. Argument 'houses' must be a list of valid house numbers.")
-            return RefitData(self.data)
+                raise Exception("Argument 'house' is by default set to fetch all houses. Argument 'house' should not be an empty list. Argument 'house' must be a list of valid house numbers.")
+            return RefitData(self.data, self.collective_dataset.keys())
                 
         except Exception as e:
             print("Error occured in get_appliance_data method of REFIT_Loader due to ", e)
@@ -160,9 +186,10 @@ class RefitData():
     """
     
     """
-    def __init__(self, data):
+    def __init__(self, data, available_houses):
         try:
             self.data = data
+            self.available_houses = available_houses
         
         except Exception as e:
             print("Error occured in initialization of RefitData class due to ", e)
@@ -170,8 +197,7 @@ class RefitData():
         finally:
             pass
     
-#     @staticmethod
-    def resample(self, sampling_period='8s', fill_value=0.0, window_limit=3.0):
+    def resample(self, house=None, sampling_period='8s', fill_value=0.0, window_limit=3.0):
         """
         
         """
@@ -179,21 +205,22 @@ class RefitData():
             self.sampling_period = sampling_period
             self.fill_value = fill_value
             self.window_limit= int(window_limit*60)
-            ls = {}
-
-            for house_number in self.data.keys():
-                print(f"Resampling for house number: ", house_number)
-                target_appliance = self.data[house_number].columns[-1]
-                appliance_data = self.data[house_number]
-                appliance_data.index = t.convert_object2timestamps(appliance_data.index)
-#                 appliance_data = appliance_data.resample('1s').mean().dropna()
-                appliance_data = appliance_data.resample('1s').asfreq()
-                appliance_data.fillna(method='ffill', axis=0, inplace=True, limit=self.window_limit)
-                appliance_data.fillna(axis=0, inplace=True, value=self.fill_value)
-                appliance_data = appliance_data.resample(self.sampling_period).median()
-                ls.update({house_number: appliance_data})
             
-            self.data = ls
+            if house == None:
+                ls = {}
+                print(self.data.keys())
+                for house_number in self.data.keys():
+                    print(f"Resampling for house number: ", house_number)
+                    target_appliance = self.data[house_number].columns[-1]
+                    appliance_data = self.data[house_number]
+                    appliance_data.index = t.convert_object2timestamps(appliance_data.index)
+    #                 appliance_data = appliance_data.resample('1s').mean().dropna()
+                    appliance_data = appliance_data.resample('1s').asfreq()
+                    appliance_data.fillna(method='ffill', axis=0, inplace=True, limit=self.window_limit)
+                    appliance_data.fillna(axis=0, inplace=True, value=self.fill_value)
+                    appliance_data = appliance_data.resample(self.sampling_period).median()
+                    ls.update({house_number: appliance_data})
+                self.data = ls
 
         except Exception as e:
             print("Error occured in resample method of REFIT_Loader due to ", e) 
