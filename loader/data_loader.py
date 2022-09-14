@@ -1,28 +1,12 @@
 
 from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
-# from transformations import Data
 import dask.dataframe as dd
 import utils.time_utils as t
-import pandas as pd
+from utils.validations import check_house_availability
+        
 
-def check_house_availability(house, collection):
-    """
-
-    """
-    try:
-        if house in collection:
-            return True
-
-        else:
-            print(f"House number = {house} does not exist in the provided dataset.")
-            return False
-
-
-
-    except Exception as e:
-        print("Error occured in check_house_availability method of REFIT_Loader due to ", e)
-            
+    
 class _Loader:
     """
     Interface that loads all the data into the memory
@@ -165,7 +149,9 @@ class REFIT_Loader(CSV_Loader):
                 for house_number in self.collective_dataset.keys():
                     if target_appliance in self.collective_dataset[house_number].columns:
                         print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                        self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
+                        data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
+                        data.index = t.convert_object2timestamps(data.index)
+                        self.data.update({house_number: data})
                     else:
                         print(f"Appliance '{target_appliance}' does not exist in house {house_number}. Check the availability of the appliance by using 'get_appliance_names' method")
             elif isinstance(house, list) and len(house)!=0: 
@@ -173,7 +159,9 @@ class REFIT_Loader(CSV_Loader):
                     if check_house_availability(house_number, self.collective_dataset.keys()):
                         if target_appliance in self.collective_dataset[house_number].columns:
                             print(f"Fetching {target_appliance.upper()} data for House {house_number}")
-                            self.data.update({house_number: self.collective_dataset[house_number][['aggregate', target_appliance]].compute()})
+                            data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
+                            data.index = t.convert_object2timestamps(data.index)
+                            self.data.update({house_number: data})
                         else:
                             print(f"Appliance '{target_appliance}' does not exist in house {house_number}. Check the availability of the appliance by using 'get_appliance_names' method")
             else:
@@ -214,10 +202,6 @@ class RefitData():
                     print(f"Resampling for house number: ", house_number)
 #                     target_appliance = self.data[house_number].columns[-1]
                     appliance_data = self.data[house_number]
-                    print(appliance_data.index)
-                    appliance_data.index = pd.to_datetime(self.data[house_number].index)
-                    print(appliance_data.index)
-#                     tmp_df = appliance_data.copy(deep=True)
 #                     appliance_data = appliance_data.resample('1s').mean().dropna()
                     appliance_data = appliance_data.resample('1s').asfreq()
                     appliance_data.fillna(method='ffill', axis=0, inplace=True, limit=self.window_limit)
