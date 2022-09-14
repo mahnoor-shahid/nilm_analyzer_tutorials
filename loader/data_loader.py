@@ -4,6 +4,7 @@ from utils.parser import refit_parser
 # from transformations import Data
 import dask.dataframe as dd
 import utils.time_utils as t
+import pandas as pd
 
 def check_house_availability(house, collection):
     """
@@ -29,7 +30,7 @@ class _Loader:
 
     def __init__(self):
         try:
-            self.data = {}
+            pass
             
         except Exception as e:
             print("Error occured in initialization of _Loader interface due to ", e)
@@ -154,6 +155,7 @@ class REFIT_Loader(CSV_Loader):
         
         """
         try:
+            self.data = {}
             if target_appliance == None:
                 print(f"Please specify target appliance using the arg 'target_appliance' (str: name of the appliance)")  
             target_appliance = target_appliance.lower()
@@ -208,13 +210,15 @@ class RefitData():
             
             if house == None:
                 ls = {}
-                print(self.data.keys())
                 for house_number in self.data.keys():
                     print(f"Resampling for house number: ", house_number)
-                    target_appliance = self.data[house_number].columns[-1]
+#                     target_appliance = self.data[house_number].columns[-1]
                     appliance_data = self.data[house_number]
-                    appliance_data.index = t.convert_object2timestamps(appliance_data.index)
-    #                 appliance_data = appliance_data.resample('1s').mean().dropna()
+                    print(appliance_data.index)
+                    appliance_data.index = pd.to_datetime(self.data[house_number].index)
+                    print(appliance_data.index)
+#                     tmp_df = appliance_data.copy(deep=True)
+#                     appliance_data = appliance_data.resample('1s').mean().dropna()
                     appliance_data = appliance_data.resample('1s').asfreq()
                     appliance_data.fillna(method='ffill', axis=0, inplace=True, limit=self.window_limit)
                     appliance_data.fillna(axis=0, inplace=True, value=self.fill_value)
