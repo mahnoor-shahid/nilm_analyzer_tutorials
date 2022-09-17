@@ -63,7 +63,7 @@ class CSV_Loader(_Loader):
                              _buildings):
         try:
             ls = {}
-            print(f"Loading specified buildings: {_buildings}")
+            print(f"\nLoading specified buildings: {_buildings}")
             for i in _buildings:
                 ls.update({i: dd.read_csv(f"{_data_folder}{i}{_files_format}")})
             return ls
@@ -98,29 +98,23 @@ class REFIT_Loader(CSV_Loader):
                 self.collective_dataset[house_number].index = self.collective_dataset[house_number]['time']
                 self.collective_dataset[house_number] = self.collective_dataset[house_number].drop('time', axis=1)
                 
-    def get_appliance_names(self, houses: list):
+    def get_appliance_names(self, house: int):
         """
         
         """
         try:
-            self.__appliance_list = {}
-            if check_list_validations(arg_name='houses', arg_value=houses, member_datatype='int'):
-                for house_number in houses:
-                    if check_house_availability(arg_name='House Number', arg_value=house_number, collection=self.collective_dataset.keys()):
-                        print(f"Fetching appliances for house = {house_number}")
-                        self.__appliance_list.update({f"House {house_number}": [name for name in self.collective_dataset[house_number].columns]})
-                return self.__appliance_list 
+            if check_correct_datatype(arg_name='house', arg_value=house, target_datatype=int):
+                if check_house_availability(arg_name='House Number', arg_value=house, collection=self.collective_dataset.keys()):
+                    print(f"Fetching appliances for house = {house}")
+                    return [name for name in self.collective_dataset[house].columns]
         except Exception as e:
             print("Error occured in get_appliance_names method of REFIT_Loader due to ", e)
                 
-    def get_house_data(self, house=None):
+    def get_house_data(self, house: int):
         """
         
         """
-        try:
-            if house == None:
-                print(f"Please specify target house using the arg 'house' (int: house id)") 
-                
+        try:                
             if check_correct_datatype(arg_name='house', arg_value=house, target_datatype=int):
                 if check_house_availability(arg_name='House Number', arg_value=house, collection=self.collective_dataset.keys()):
                     print(f"Loading data for house = {house}")
@@ -150,7 +144,7 @@ class REFIT_Loader(CSV_Loader):
                             data.index = t.convert_object2timestamps(data.index)
                             self.data.update({house_number: data})
                         else:
-                            print(f"Appliance '{target_appliance}' does not exist in house {house_number}. Hint: Check the availability of the appliance by using 'get_appliance_names' method")
+                            print(f"Appliance '{target_appliance.upper()}' does not exist in house {house_number}. Hint: Check the availability of the appliance by using 'get_appliance_names' method")
 
             return RefitData(self.data, self.collective_dataset.keys())
                 
