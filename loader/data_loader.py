@@ -2,7 +2,7 @@
 from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
 import dask.dataframe as dd
-import utils.time_utils as t
+from utils.time_utils import convert_object2timestamps
 from utils.validations import check_house_availability, check_list_validations, check_correct_datatype
         
 
@@ -141,7 +141,7 @@ class REFIT_Loader(CSV_Loader):
                         if target_appliance in self.collective_dataset[house_number].columns:
                             print(f"Fetching {target_appliance.upper()} data for House {house_number}")
                             data = self.collective_dataset[house_number][['aggregate', target_appliance]].compute()
-                            data.index = t.convert_object2timestamps(data.index)
+                            data.index = convert_object2timestamps(data.index)
                             self.data.update({house_number: data})
                         else:
                             print(f"Appliance '{target_appliance.upper()}' does not exist in house {house_number}. Hint: Check the availability of the appliance by using 'get_appliance_names' method")
