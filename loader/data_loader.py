@@ -1,11 +1,10 @@
 
+import dask.dataframe as dd
 from utils.configuration import get_config_from_json
 from utils.parser import refit_parser
-import dask.dataframe as dd
 from utils.time_utils import convert_object2timestamps
 from utils.validations import check_house_availability, check_list_validations, check_correct_datatype
         
-
     
 class _Loader:
     """
@@ -30,7 +29,7 @@ class _Loader:
         
 class CSV_Loader(_Loader):
     """
-    
+    Class that loads all the data into the memory using different methods
     """
     def __init__(self):
         try:
@@ -75,7 +74,7 @@ class CSV_Loader(_Loader):
     
 class REFIT_Loader(CSV_Loader):
     """
-    
+    Class that loads all the data into the memory using DASK
     """
     def __init__(self):
         try:
@@ -100,7 +99,15 @@ class REFIT_Loader(CSV_Loader):
                 
     def get_appliance_names(self, house: int):
         """
-        
+        This method will return the names of the available appliances in the specified house number
+
+        Parameters 
+        ----------
+        house : int 
+                number of a specific house e.g, house=2 for 'house_2.csv' 
+
+        returns: list
+                 contains names of the available appliances in the specified house
         """
         try:
             if check_correct_datatype(arg_name='house', arg_value=house, target_datatype=int):
@@ -112,20 +119,62 @@ class REFIT_Loader(CSV_Loader):
                 
     def get_house_data(self, house: int):
         """
-        
+        This method will return the dataframe of the specified house number from refit dataset
+
+        Parameters 
+        ----------
+        house : int 
+                number of a specific house e.g, house=2 for 'house_2.csv' 
+
+        returns: pandas.core.frame.DataFrame
+                dataframe is of the following format            
+                {
+                    'time': pandas.core.indexes.datetimes.DatetimeIndex
+                        timestamps as index identifying every data row
+                    'unix': numpy.int64
+                        timestamps in unix
+                    'aggregate': numpy.int64
+                        aggregated power consumption of all appliances in the sepcified house
+                    
+                    *** appliances and their consumption values in numpy.int64 varies house wise ***
+                }
         """
         try:                
             if check_correct_datatype(arg_name='house', arg_value=house, target_datatype=int):
                 if check_house_availability(arg_name='House Number', arg_value=house, collection=self.collective_dataset.keys()):
                     print(f"Loading data for house = {house}")
-                    return self.collective_dataset[house].compute() 
+                    data = self.collective_dataset[house].compute() 
+                    data.index = convert_object2timestamps(data.index)
+                    return data
         
         except Exception as e:
             print("Error occured in get_house_data method of REFIT_Loader due to ", e)
     
     def get_appliance_data(self, appliance, houses=None):
         """
-        
+        This method will return RefitData object that can let user access data in dictionary format as well can access some transformation methods
+
+        Parameters 
+        ----------
+        appliance : string
+                name of the target appliance (name of the column targeted in the specified house/s)
+        house : list
+                contains numbers of a specific houses e.g, house=2 for 'house_2.csv' 
+
+        returns: RefitData object
+                .data = to access data in a dictionary format
+                        dictionary contains dataframes of multiple houses where key represents the house number (int) and value represents (pandas.core.frame.DataFrame)
+                        dataframe is of the following format            
+                        {
+                            'time': pandas.core.indexes.datetimes.DatetimeIndex
+                                timestamps as index identifying every data row
+                            'unix': numpy.int64
+                                timestamps in unix
+                            'aggregate': numpy.int64
+                                aggregated power consumption of all appliances in the sepcified house
+
+                            *** appliances and their consumption values in numpy.int64 varies house wise ***
+                        }
         """
         try:
             self.data = {}
@@ -154,7 +203,7 @@ class REFIT_Loader(CSV_Loader):
 
 class RefitData():
     """
-    
+    Class that loads the provided data after computing DASK dataframes and provides different methods for transformations
     """
     def __init__(self, data, available_houses):
         try:
@@ -167,9 +216,35 @@ class RefitData():
         finally:
             pass
     
-    def resample(self, house=None, sampling_period='8s', fill_value=0.0, window_limit=3.0):
+    def resample(self, house=None, sampling_period='8s', window_limit=3.0, fill_value=0.0):
         """
-        
+        This method will return RefitData object that can let user access data in dictionary format as well can access some transformation methods
+
+        Parameters 
+        ----------
+        house : int 
+                number of a specific house e.g, house=2 for 'house_2.csv' 
+        sampling_period: string
+                         set the sampling rate in a string format e.g, '8s' means 8 seconds
+        window_limit : float
+                        set the window size in minutes to forward fill last value
+        fill_value: float
+                    set the value with which remaining np.nans are filled 
+
+        returns: RefitData object (updated)
+                .data = to access data in a dictionary format
+                        dictionary contains dataframes of multiple houses where key represents the house number (int) and value represents (pandas.core.frame.DataFrame)
+                        dataframe is of the following format            
+                        {
+                            'time': pandas.core.indexes.datetimes.DatetimeIndex
+                                timestamps as index identifying every data row
+                            'unix': numpy.int64
+                                timestamps in unix
+                            'aggregate': numpy.int64
+                                aggregated power consumption of all appliances in the sepcified house
+
+                            *** appliances and their consumption values in numpy.int64 varies house wise ***
+                        }
         """
         try:
             self.sampling_period = sampling_period

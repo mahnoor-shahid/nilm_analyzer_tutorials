@@ -1,7 +1,15 @@
 
 def refit_parser(readme_file):
     """
-    
+    This method will return the dictionary of the appliances, parsed from README file of refit data
+
+    Parameters 
+    ----------
+    readme_file : txt file 
+                    original README file of refit datase
+
+    returns: pandas.Dictionary
+                    dictionary contains the all the appliances in a specific house as mentioned in README file
     """
     try:
         print(f'Parsing the readme file specified: {readme_file}')

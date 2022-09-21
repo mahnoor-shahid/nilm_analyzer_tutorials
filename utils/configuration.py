@@ -3,11 +3,18 @@ import json
 
 def get_config_from_json(description, config_file):
     """
-    Get the config from a json file
-    :param json_file: the path of the config file
-    :return: config(namespace), config(dictionary)
-    """
+    This method will return the dictionary of the specified config_file
 
+    Parameters 
+    ----------
+    description : string 
+                    description of the json file     
+    config_file : string
+                    path of the configuration file to load
+                    
+    returns: pandas.Dictionary
+                    dictionary contains the all the properties set for the configuration which can be accessed with keys
+    """
     with open(config_file, 'r') as json_file:
         try:
             config_dict = json.load(json_file)
