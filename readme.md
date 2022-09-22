@@ -15,17 +15,20 @@ https://rdcu.be/cMD9F <br />
 
 ## Steps to implement this project
 1) Clone this repository to the target source project.
-2) Download the REFIT dataset using the [download links](#downloads) below 
-3) Unzip the data in the **data/refit/** folder
-4) Make sure to download the "REFIT_Readme.txt" and save it in the **data/refit/** folder
-5) Use the notebooks "geting_started.ipynb" and "resampling.ipynb" to know the instructions on how to use the loader
-
-
-## Downloads
-The REFIT Smart Home dataset is a publicly available dataset of Smart Home data. <br />
-Dataset - https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z <br />
-Readme File - https://pureportal.strath.ac.uk/files/52873458/REFIT_Readme.txt <br />
-Main Page - https://pureportal.strath.ac.uk/en/datasets/refit-electrical-load-measurements-cleaned
+```
+git clone https://github.com/mahnoor-shahid/refit_loader.git
+```
+2) Download the REFIT dataset using the [download links](#downloads) below
+```
+cd refit_loader
+wget https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z
+```
+3) Unzip the downloaded REFIT dataset in the **data/refit/** folder
+```
+unzip Processed_Data_CSV.7z -d temp_for_zip_extract
+```
+5) Make sure to download the "REFIT_Readme.txt" and save it in the **data/refit/** folder
+6) Use the notebooks "geting_started.ipynb" and "resampling.ipynb" to know the instructions on how to use the loader
 
 
 ### Repo Structure:
@@ -79,7 +82,16 @@ This repository follows the below structure format:
 ├── readme.md
 ```
 
-## Dependencies:
+
+
+## Downloads
+The REFIT Smart Home dataset is a publicly available dataset of Smart Home data. <br />
+Dataset - https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z <br />
+Readme File - https://pureportal.strath.ac.uk/files/52873458/REFIT_Readme.txt <br />
+Main Page - https://pureportal.strath.ac.uk/en/datasets/refit-electrical-load-measurements-cleaned
+
+
+## Dependencies
 ```
   - python=3.9.2
   - numpy=1.20.3
@@ -88,11 +100,8 @@ This repository follows the below structure format:
   - json=2.0.9
 ```
 
-# Citation:
+## Citation
 ```
 Murray, D., Stankovic, L. & Stankovic, V. An electrical load measurements dataset of United Kingdom households from a two-year longitudinal study. Sci Data 4, 160122 (2017). https://doi.org/10.1038/sdata.2016.122
 ```
-
-## Future Work:
-- data downloading from source to repository
 
