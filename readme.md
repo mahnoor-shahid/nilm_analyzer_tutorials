@@ -24,7 +24,7 @@ https://rdcu.be/cMD9F <br />
 ## Downloads
 The REFIT Smart Home dataset is a publicly available dataset of Smart Home data. <br />
 Dataset - https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z <br />
-Readme File - <br />
+Readme File - https://pureportal.strath.ac.uk/files/52873458/REFIT_Readme.txt <br />
 Main Page - https://pureportal.strath.ac.uk/en/datasets/refit-electrical-load-measurements-cleaned
 
 
