@@ -18,17 +18,34 @@ https://rdcu.be/cMD9F <br />
 ```
 git clone https://github.com/mahnoor-shahid/refit_loader.git
 ```
-2) Download the REFIT dataset using the [download links](#downloads) below
+*You can skip Step 2 and 3 if all the [dependencies](#dependencies) are already in installed in the current environment*
+
+2) Create a conda environment using the environment.yml file <br/>
 ```
-cd refit_loader
-wget https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z
+cd refit_loader/
+conda create env --file=environment.yml
 ```
-3) Unzip the downloaded REFIT dataset in the **data/refit/** folder
+
+3) Activate the created environment
 ```
-unzip Processed_Data_CSV.7z -d temp_for_zip_extract
+conda activate refit_loader_env
 ```
-5) Make sure to download the "REFIT_Readme.txt" and save it in the **data/refit/** folder
-6) Use the notebooks "geting_started.ipynb" and "resampling.ipynb" to know the instructions on how to use the loader
+
+4) Download the REFIT dataset in the **data/** folder (*it might take some time dataset takes the storage of around 6GB*)
+```
+cd data/
+Invoke-WebRequest https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z -O Processed_Data_CSV.7z
+```
+5) Unzip the downloaded REFIT dataset 
+```
+unzip Processed_Data_CSV.7z -d refit/
+```
+6) Make sure to download the "REFIT_Readme.txt" and save it in the **data/refit/** folder
+```
+cd refit_loader/data/refit
+Invoke-WebRequest https://pureportal.strath.ac.uk/files/52873458/REFIT_Readme.txt -O REFIT_Readme.txt
+```
+7) Use the notebooks "geting_started.ipynb" and "resampling.ipynb" to know the instructions on how to use the loader
 
 
 ### Repo Structure:
