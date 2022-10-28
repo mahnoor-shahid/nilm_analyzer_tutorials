@@ -1,9 +1,9 @@
 
 import dask.dataframe as dd
-from utils.configuration import get_config_from_json
-from utils.parser import refit_parser
-from utils.time_utils import convert_object2timestamps
-from utils.validations import check_house_availability, check_list_validations, check_correct_datatype
+from refit_loader.utilities.configuration import get_config_from_json 
+from refit_loader.utilities.parser import refit_parser
+from refit_loader.utilities.time_utils import convert_object2timestamps
+from refit_loader.utilities.validations import check_house_availability, check_list_validations, check_correct_datatype
         
     
 class _Loader:
@@ -84,7 +84,7 @@ class REFIT_Loader(CSV_Loader):
             print("Error occured in initialization of REFIT_Loader class due to ", e)
                 
         finally:
-            config = get_config_from_json(description="general configuration", config_file="./config.json")
+            config = get_config_from_json(description="general configuration", config_file="refit_loader/config.json")
             self.collective_dataset = CSV_Loader._load_files_via_dask(_data_folder=config['DATA_FOLDER']+'House_',
                                                                 _files_format=config['DATA_TYPE'],
                                                                 _buildings=config['REFIT_HOUSES'])
