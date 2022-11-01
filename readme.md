@@ -1,4 +1,4 @@
-# REFIT Loader
+# REFIT Analyzer
 > This project uses **Dask Dataframes** to ease and fasten the process of loading all the data of REFIT and provides functionalities to transform and manipulate the REFIT dataset for statistical analysis purpose.
 
 
