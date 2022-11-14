@@ -1,11 +1,11 @@
+
 # REFIT Analyzer
-> This project uses **Dask Dataframes** to ease and fasten the process of loading all the data of REFIT and provides functionalities to transform and manipulate the REFIT dataset for statistical analysis purpose.
+> This project uses refit_loader as a submodule which has taken the advantage of **Dask Dataframes** to ease and fasten the process of loading all the data of REFIT dataset and also provides some functionalities. This project demonstrates how refit_loader can be used to do different transformations (e.g, resampling) and manipulate the REFIT dataset for statistical analysis purpose. 
 
 
 ## REFIT dataset
 An electrical load measurements dataset of United Kingdom households from a two-year longitudinal study. Sci Data 4, 160122 (2017). <br />
 Murray, D., Stankovic, L. & Stankovic, V.  <br />
-
 
 ### Links
 For more detail information, visit the following links: <br />
@@ -13,55 +13,59 @@ http://dx.doi.org/10.1038/sdata.2016.122 <br />
 https://rdcu.be/cMD9F <br />
 
 
-## Steps to implement this project
-1) Clone this repository to the target source project.
+## Dependencies
+Ensure that the following dependencies are satisfied either in your current environment 
 ```
-git clone https://github.com/mahnoor-shahid/refit_loader.git
+  - python=3.9.2
+  - numpy=1.20.3
+  - pandas=1.2.4
+  - dask=2021.06.2
+  - json=2.0.9
 ```
-*You can skip Step 2 and 3 if all the [dependencies](#dependencies) are already in installed in the current environment*
-
-2) Create a conda environment using the environment.yml file <br/>
+or create a new environment using 'environment.yml'
 ```
-cd refit_loader/
 conda create env --file=environment.yml
-```
-
-3) Activate the created environment
-```
 conda activate refit_loader_env
 ```
 
-4) Download the REFIT dataset in the **data/** folder (*it might take some time dataset takes the storage of around 6GB*)
-```
-cd data/
-Invoke-WebRequest https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z -O Processed_Data_CSV.7z
-```
-5) Unzip the downloaded REFIT dataset 
-```
-unzip Processed_Data_CSV.7z -d refit/
-```
-6) Make sure to download the "REFIT_Readme.txt" and save it in the **data/refit/** folder
-```
-cd refit_loader/data/refit
-Invoke-WebRequest https://pureportal.strath.ac.uk/files/52873458/REFIT_Readme.txt -O REFIT_Readme.txt
-```
-7) Use the notebooks "geting_started.ipynb" and "resampling.ipynb" to know the instructions on how to use the loader
 
+## Steps to implement this project
+1) Use refit_loader as a submodule and clone it into your target source project
+```
+git submodule add https://github.com/mahnoor-shahid/refit_loader.git
+```
+
+2) Make sure the 'config.json' file of refit_loader has the correct DATA_FOLDER path; [Download] the dataset and it should be located in this data folder.
+```
+{ 
+    "DATA_FOLDER" : "data/refit/",
+    "DATA_TYPE" : ".csv",
+    "README_FILE" : "refit_loader/REFIT_Readme.txt",
+    "REFIT_HOUSES" : [1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21]
+}
+```
+
+3) Use the notebooks "geting_started.ipynb" and "resampling.ipynb" to know the instructions on how to use the refit loader
+
+Reference Repository: <br />
+[Refit Loader](https://github.com/mahnoor-shahid/refit_loader) = REFIT loader is a simple, fast and handy data loader for REFIT dataset to explore the data at convenience, provided with basic transformations like resampling and extract activities by thresholding.
 
 ### Repo Structure:
 This repository follows the below structure format:
 ```
 |
-|── loader
-|  └── __init__.py
+|  
+├── refit_loader
 |  └── data_loader.py
-|
-|
-├── utils
-|  └── configuration.py
-|  └── parser.py
-|  └── time_utils.py
-|  └── validations.py
+|  └── utilities
+|   |  └── configuration.py
+|   |  └── parser.py
+|   |  └── time_utils.py
+|   |  └── validations.py
+|  └── config.json
+|  └── environment.yml
+|  └── REFIT_README.txt
+|  └── readme.md
 |
 |
 ├── data
@@ -88,34 +92,22 @@ This repository follows the below structure format:
 |  |  └── House_20.csv
 |
 |
-├── config.json
-|
 ├── 01_getting_started.ipynb
 |
 ├── 02_resampling.ipynb
+|
+├── 03_extract_durations.ipynb
 |
 ├── environment.yml
 |
 ├── readme.md
 ```
 
-
-
-## Downloads
+## From where to download the dataset 
 The REFIT Smart Home dataset is a publicly available dataset of Smart Home data. <br />
 Dataset - https://pureportal.strath.ac.uk/files/52873459/Processed_Data_CSV.7z <br />
-Readme File - https://pureportal.strath.ac.uk/files/52873458/REFIT_Readme.txt <br />
 Main Page - https://pureportal.strath.ac.uk/en/datasets/refit-electrical-load-measurements-cleaned
 
-
-## Dependencies
-```
-  - python=3.9.2
-  - numpy=1.20.3
-  - pandas=1.2.4
-  - dask=2021.06.2
-  - json=2.0.9
-```
 
 ## Citation
 ```
