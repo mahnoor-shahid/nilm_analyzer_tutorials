@@ -1,6 +1,6 @@
 
-# REFIT Analyzer
-> This project uses refit_loader as a submodule which has taken the advantage of **Dask Dataframes** to ease and fasten the process of loading all the data of REFIT dataset and also provides some functionalities. This project demonstrates how refit_loader can be used to do different transformations (e.g, resampling) and manipulate the REFIT dataset for statistical analysis purpose. 
+# nilm analyzer tutorials
+> This project uses python package nilm-analyzer which has taken the advantage of **Dask Dataframes** to ease and fasten the process of loading all the data of any publicly available NILM dataset and also provides some basic transformation functionalities. This project demonstrates how refit_loader can be used to do different transformations (e.g, resampling) and manipulate the REFIT dataset for statistical analysis purpose. 
 
 
 ### About REFIT dataset
