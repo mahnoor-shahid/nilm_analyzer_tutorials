@@ -53,29 +53,12 @@ kettle.data
 This repository follows the below structure format:
 ```
 |
-├── data
-|  └── refit
-|  |  └── REFIT_Readme.txt
-|  |  └── House_1.csv
-|  |  └── House_2.csv
-|  |  └── House_3.csv
-|  |  └── House_4.csv
-|  |  └── House_5.csv
-|  |  └── House_6.csv
-|  |  └── House_7.csv
-|  |  └── House_8.csv
-|  |  └── House_9.csv
-|  |  └── House_10.csv
-|  |  └── House_11.csv
-|  |  └── House_12.csv
-|  |  └── House_13.csv
-|  |  └── House_15.csv
-|  |  └── House_16.csv
-|  |  └── House_17.csv
-|  |  └── House_18.csv
-|  |  └── House_19.csv
-|  |  └── House_20.csv
-|
+├── refit
+|  └── kettle
+|   |  └── basic.ipynb
+|   |  └── splits_for_training.ipynb
+|   |  └── fetch_activations.ipynb
+|  └── microwave
 |
 ├── 01_getting_started.ipynb
 |
