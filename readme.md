@@ -1,15 +1,9 @@
 
-# nilm analyzer tutorials
-> This project uses python package nilm-analyzer which has taken the advantage of **Dask Dataframes** to ease and fasten the process of loading all the data of any publicly available NILM dataset and also provides some basic transformation functionalities. This project demonstrates how refit_loader can be used to do different transformations (e.g, resampling) and manipulate the REFIT dataset for statistical analysis purpose. 
+# nilm-analyzer tutorials
+> This project uses python package nilm-analyzer which has taken the advantage of **Dask Dataframes** to ease and fasten the process of loading all the data of any publicly available NILM dataset and also provides some basic transformation functionalities. This project demonstrates how nilm-analyzer can be used to do different transformations (e.g, resampling) and manipulate the datasets for statistical analysis purpose. 
 
 
-### About REFIT dataset
-An electrical load measurements dataset of United Kingdom households from a two-year longitudinal study. Sci Data 4, 160122 (2017). <br />
-Murray, D., Stankovic, L. & Stankovic, V.  <br />
-
-For more detail information, visit the following links: <br />
-http://dx.doi.org/10.1038/sdata.2016.122 <br />
-https://rdcu.be/cMD9F <br />
+Link to the main repository: https://github.com/mahnoor-shahid/nilm_analyzer
 
 
 ## Dependencies
