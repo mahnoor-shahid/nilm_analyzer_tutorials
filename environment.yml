@@ -1,4 +1,4 @@
-name: refit_loader_env
+name: nilm_analyzer_tutorials
 channels:
   - defaults
 dependencies:
@@ -7,3 +7,4 @@ dependencies:
   - pandas>=1.2.4
   - dask>=2021.06.2
   - scikit-learn>=1.1.2
+  - nilm-analyzer>=1.0.6
